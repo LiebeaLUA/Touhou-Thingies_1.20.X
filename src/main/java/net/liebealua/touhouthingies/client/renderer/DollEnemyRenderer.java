@@ -23,4 +23,14 @@ public class DollEnemyRenderer extends MobRenderer<DollEnemy, DollEnemyModel<Dol
             return null;
         }
     }
+
+    @Override
+    protected boolean isShaking(DollEnemy pEntity) {
+        return super.isShaking(pEntity) || pEntity.getPrimed();
+    }
+
+    @Override
+    protected float getWhiteOverlayProgress(DollEnemy pLivingEntity, float pPartialTicks) {
+        return super.getWhiteOverlayProgress(pLivingEntity, pPartialTicks);
+    }
 }

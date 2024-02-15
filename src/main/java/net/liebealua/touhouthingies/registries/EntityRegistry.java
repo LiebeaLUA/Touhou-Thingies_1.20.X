@@ -14,6 +14,6 @@ public class EntityRegistry {
 
     public static final RegistryObject<EntityType<DollEnemy>> DOLL_ENEMY = ENTITIES.register("doll_enemy",
             () -> EntityType.Builder.<DollEnemy>of(DollEnemy::new, MobCategory.MONSTER)
-                    .sized(0.6f, 1.5f)
+                    .sized(0.6f, 1.4f)
                     .build(new ResourceLocation(TouhouThingies.MODID, "doll_enemy").toString()));
 }

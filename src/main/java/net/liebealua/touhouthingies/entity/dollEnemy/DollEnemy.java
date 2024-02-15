@@ -1,16 +1,17 @@
 package net.liebealua.touhouthingies.entity.dollEnemy;
 
+import net.liebealua.touhouthingies.client.animation.DollEnemyAnimation;
 import net.liebealua.touhouthingies.registries.EntityRegistry;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.AnimationState;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
@@ -21,6 +22,8 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.monster.ZombifiedPiglin;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
 import org.jetbrains.annotations.NotNull;
 
 public class DollEnemy extends Monster {
@@ -57,14 +60,14 @@ public class DollEnemy extends Monster {
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new FloatGoal(this));
         this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.0, true));
-        this.goalSelector.addGoal(3, new WaterAvoidingRandomStrollGoal(this, 0.8));
-        this.goalSelector.addGoal(4, new LookAtPlayerGoal(this, Player.class, 6.0f));
-        this.goalSelector.addGoal(5, new RandomLookAroundGoal(this));
-        this.goalSelector.addGoal(6, new LookAtPlayerGoal(this, LivingEntity.class, 6.0f));
+        this.goalSelector.addGoal(2, new WaterAvoidingRandomStrollGoal(this, 0.8));
+        this.goalSelector.addGoal(3, new LookAtPlayerGoal(this, Player.class, 6.0f));
+        this.goalSelector.addGoal(4, new RandomLookAroundGoal(this));
+        this.goalSelector.addGoal(5, new LookAtPlayerGoal(this, LivingEntity.class, 6.0f));
 
         this.targetSelector.addGoal(0, new HurtByTargetGoal(this));
         this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<Player>(this, Player.class, true));
-            this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<Pig>(this, Pig.class, true));
+        this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<Pig>(this, Pig.class, true));
         this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<ZombifiedPiglin>(this, ZombifiedPiglin.class, true));
     }
 
@@ -72,24 +75,19 @@ public class DollEnemy extends Monster {
     public void tick() {
         if(this.level().isClientSide()) {
             this.idleAnimationState.animateWhen(!this.isInWaterOrBubble() && !this.walkAnimation.isMoving() && !this.getPrimed(), this.tickCount);
+            this.deathAnimationState.animateWhen(this.getPrimed(), this.tickCount);
+            this.shakeAnimationState.animateWhen(this.getPrimed(), this.tickCount);
         }
 
         if (this.getPrimed()) {
-
-            if (level().isClientSide()) {
-                this.idleAnimationState.stop();
-                this.deathAnimationState.startIfStopped(this.tickCount);
-//                if (this.deathAnimationState.getAccumulatedTime() >= DollEnemyAnimation.death.lengthInSeconds() * 20) {
-//                    this.deathAnimationState.stop();
-//                    this.shakeAnimationState.start(this.tickCount);
-//                }
-            }
             this.setFuse(this.getFuse() - 1);
             if (this.getFuse() <= 0) {
                 if (!this.level().isClientSide) {
                     this.explode();
                 }
-                super.die(this.deathSource);
+                if (this.deathSource != null) {
+                    super.die(deathSource);
+                }
                 this.remove(RemovalReason.KILLED);
             }
         }
@@ -98,19 +96,37 @@ public class DollEnemy extends Monster {
     }
 
     @Override
-    public void die(DamageSource pDamageSource) {
+    public void die(@NotNull DamageSource pDamageSource) {
         this.setHealth(1);
         if (!this.getPrimed()) {
-            this.deathSource = pDamageSource;
+            if (!this.level().isClientSide()) {
+                this.deathSource = pDamageSource;
+            }
             this.setPrimed(true);
+        }
+    }
+
+    public void onSyncedDataUpdated(EntityDataAccessor<?> pKey) {
+        if (DATA_PRIMED.equals(pKey)) {
             this.removeFreeWill();
+            this.setTarget(null);
+            this.getNavigation().stop();
             this.playSound(SoundEvents.TNT_PRIMED);
-//            this.deathAnimationState.start(tickCount);
+            this.refreshDimensions();
+        }
+    }
+
+    @Override
+    public EntityDimensions getDimensions(Pose pPose) {
+        if (this.getPrimed()) {
+            return new EntityDimensions(super.getDimensions(pPose).width, 1.0f, super.getDimensions(pPose).fixed);
+        } else {
+            return super.getDimensions(pPose);
         }
     }
 
     protected void explode() {
-        this.level().explode(this, this.getX(), this.getY(0.0625), this.getZ(), explosionRadius, Level.ExplosionInteraction.MOB);
+        this.level().explode(this, this.getX(), this.getY(0.0625), this.getZ(), explosionRadius, Level.ExplosionInteraction.NONE);
     }
 
 
