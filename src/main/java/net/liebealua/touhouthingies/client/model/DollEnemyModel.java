@@ -46,29 +46,67 @@ public class DollEnemyModel<T extends DollEnemy> extends HierarchicalModel<T> im
 		this.left_leg = body_lower.getChild("left_leg");
 	}
 
+//	public static LayerDefinition createBodyLayer() {
+//		MeshDefinition meshdefinition = new MeshDefinition();
+//		PartDefinition partdefinition = meshdefinition.getRoot();
+//
+//		PartDefinition dollEnemy = partdefinition.addOrReplaceChild("dollEnemy", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
+//
+//		PartDefinition body = dollEnemy.addOrReplaceChild("body", CubeListBuilder.create(), PartPose.offset(0.0F, 6.0F, 0.0F));
+//
+//		PartDefinition body_upper = body.addOrReplaceChild("body_upper", CubeListBuilder.create().texOffs(24, 25).addBox(-2.0F, -6.0F, -1.0F, 4.0F, 6.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 9.0F, 0.0F));
+//
+//		PartDefinition chest_r1 = body_upper.addOrReplaceChild("chest_r1", CubeListBuilder.create().texOffs(28, 0).addBox(-2.0F, -1.0F, -2.0F, 4.0F, 2.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, -4.0F, 0.5F, -0.4363F, 0.0F, 0.0F));
+//
+//		PartDefinition head = body_upper.addOrReplaceChild("head", CubeListBuilder.create().texOffs(0, 20).addBox(-3.0F, -6.0F, -3.0F, 6.0F, 6.0F, 6.0F, new CubeDeformation(0.0F))
+//				.texOffs(22, 11).addBox(-4.0F, -8.0F, 1.0F, 8.0F, 3.0F, 0.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -6.0F, 0.0F));
+//
+//		PartDefinition right_arm = body_upper.addOrReplaceChild("right_arm", CubeListBuilder.create(), PartPose.offset(2.0F, -6.0F, 0.0F));
+//
+//		PartDefinition right_arm_r1 = right_arm.addOrReplaceChild("right_arm_r1", CubeListBuilder.create().texOffs(24, 33).addBox(0.0F, 0.0F, -1.0F, 2.0F, 7.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, -0.1309F));
+//
+//		PartDefinition left_arm = body_upper.addOrReplaceChild("left_arm", CubeListBuilder.create(), PartPose.offset(-2.0F, -6.0F, 0.0F));
+//
+//		PartDefinition left_arm_r1 = left_arm.addOrReplaceChild("left_arm_r1", CubeListBuilder.create().texOffs(16, 32).addBox(-2.0F, 0.0F, -1.0F, 2.0F, 7.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.1309F));
+//
+//		PartDefinition body_lower = body.addOrReplaceChild("body_lower", CubeListBuilder.create(), PartPose.offset(0.0F, 18.0F, 0.0F));
+//
+//		PartDefinition skirt = body_lower.addOrReplaceChild("skirt", CubeListBuilder.create().texOffs(18, 20).addBox(-3.0F, 0.0F, -2.0F, 6.0F, 1.0F, 4.0F, new CubeDeformation(0.0F))
+//				.texOffs(0, 11).addBox(-4.0F, 1.0F, -3.0F, 8.0F, 3.0F, 6.0F, new CubeDeformation(0.0F))
+//				.texOffs(0, 0).addBox(-5.0F, 4.0F, -4.0F, 10.0F, 3.0F, 8.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -10.0F, 0.0F));
+//
+//		PartDefinition right_leg = body_lower.addOrReplaceChild("right_leg", CubeListBuilder.create().texOffs(8, 32).addBox(-1.0F, 0.0F, -1.0F, 2.0F, 9.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(1.0F, -9.0F, 0.0F));
+//
+//		PartDefinition left_leg = body_lower.addOrReplaceChild("left_leg", CubeListBuilder.create().texOffs(0, 32).addBox(-1.0F, 0.0F, -1.0F, 2.0F, 9.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(-1.0F, -9.0F, 0.0F));
+//
+//		return LayerDefinition.create(meshdefinition, 64, 64);
+//	}
 
 	public static LayerDefinition createBodyLayer() {
 		MeshDefinition meshdefinition = new MeshDefinition();
 		PartDefinition partdefinition = meshdefinition.getRoot();
 
-		PartDefinition dollEnemy = partdefinition.addOrReplaceChild("dollEnemy", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
+		PartDefinition dollEnemy = partdefinition.addOrReplaceChild("dollEnemy", CubeListBuilder.create(), PartPose.offset(0.0F, 24.0F, 0.0F));
 
-		PartDefinition body = dollEnemy.addOrReplaceChild("body", CubeListBuilder.create(), PartPose.offset(0.0F, 6.0F, 0.0F));
+		PartDefinition body = dollEnemy.addOrReplaceChild("body", CubeListBuilder.create(), PartPose.offset(0.0F, -18.0F, 0.0F));
 
 		PartDefinition body_upper = body.addOrReplaceChild("body_upper", CubeListBuilder.create().texOffs(24, 25).addBox(-2.0F, -6.0F, -1.0F, 4.0F, 6.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 9.0F, 0.0F));
 
-		PartDefinition chest_r1 = body_upper.addOrReplaceChild("chest_r1", CubeListBuilder.create().texOffs(28, 0).addBox(-2.0F, -1.0F, -2.0F, 4.0F, 2.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, -4.0F, 0.5F, -0.4363F, 0.0F, 0.0F));
+		PartDefinition back_ribbon_r1 = body_upper.addOrReplaceChild("back_ribbon_r1", CubeListBuilder.create().texOffs(40, 0).addBox(-3.0F, -2.0F, 0.0F, 6.0F, 4.0F, 0.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, -2.0F, 2.0F, 0.2182F, 0.0F, 0.0F));
+
+		PartDefinition chest_r1 = body_upper.addOrReplaceChild("chest_r1", CubeListBuilder.create().texOffs(28, 0).addBox(-2.0F, -1.0F, -2.0F, 4.0F, 2.0F, 2.0F, new CubeDeformation(-0.001F)), PartPose.offsetAndRotation(0.0F, -4.0F, 0.5F, -0.4363F, 0.0F, 0.0F));
 
 		PartDefinition head = body_upper.addOrReplaceChild("head", CubeListBuilder.create().texOffs(0, 20).addBox(-3.0F, -6.0F, -3.0F, 6.0F, 6.0F, 6.0F, new CubeDeformation(0.0F))
-				.texOffs(22, 11).addBox(-4.0F, -8.0F, 1.0F, 8.0F, 3.0F, 0.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -6.0F, 0.0F));
+				.texOffs(22, 11).addBox(-4.0F, -8.0F, 2.0F, 8.0F, 3.0F, 0.0F, new CubeDeformation(0.0F))
+				.texOffs(36, 20).addBox(-3.0F, -6.0F, -3.0F, 6.0F, 10.0F, 6.0F, new CubeDeformation(0.25F)), PartPose.offset(0.0F, -6.0F, 0.0F));
 
 		PartDefinition right_arm = body_upper.addOrReplaceChild("right_arm", CubeListBuilder.create(), PartPose.offset(2.0F, -6.0F, 0.0F));
 
-		PartDefinition right_arm_r1 = right_arm.addOrReplaceChild("right_arm_r1", CubeListBuilder.create().texOffs(24, 33).addBox(0.0F, 0.0F, -1.0F, 2.0F, 7.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, -0.1309F));
+		PartDefinition right_arm_r1 = right_arm.addOrReplaceChild("right_arm_r1", CubeListBuilder.create().texOffs(8, 32).addBox(0.0F, 0.0F, -1.0F, 2.0F, 7.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, -0.1309F));
 
 		PartDefinition left_arm = body_upper.addOrReplaceChild("left_arm", CubeListBuilder.create(), PartPose.offset(-2.0F, -6.0F, 0.0F));
 
-		PartDefinition left_arm_r1 = left_arm.addOrReplaceChild("left_arm_r1", CubeListBuilder.create().texOffs(16, 32).addBox(-2.0F, 0.0F, -1.0F, 2.0F, 7.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.1309F));
+		PartDefinition left_arm_r1 = left_arm.addOrReplaceChild("left_arm_r1", CubeListBuilder.create().texOffs(8, 32).addBox(-2.0F, 0.0F, -1.0F, 2.0F, 7.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.1309F));
 
 		PartDefinition body_lower = body.addOrReplaceChild("body_lower", CubeListBuilder.create(), PartPose.offset(0.0F, 18.0F, 0.0F));
 
@@ -76,17 +114,16 @@ public class DollEnemyModel<T extends DollEnemy> extends HierarchicalModel<T> im
 				.texOffs(0, 11).addBox(-4.0F, 1.0F, -3.0F, 8.0F, 3.0F, 6.0F, new CubeDeformation(0.0F))
 				.texOffs(0, 0).addBox(-5.0F, 4.0F, -4.0F, 10.0F, 3.0F, 8.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -10.0F, 0.0F));
 
-		PartDefinition right_leg = body_lower.addOrReplaceChild("right_leg", CubeListBuilder.create().texOffs(8, 32).addBox(-1.0F, 0.0F, -1.0F, 2.0F, 9.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(1.0F, -9.0F, 0.0F));
+		PartDefinition right_leg = body_lower.addOrReplaceChild("right_leg", CubeListBuilder.create().texOffs(0, 32).addBox(-1.0F, 0.0F, -1.0F, 2.0F, 9.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(1.0F, -9.0F, 0.0F));
 
 		PartDefinition left_leg = body_lower.addOrReplaceChild("left_leg", CubeListBuilder.create().texOffs(0, 32).addBox(-1.0F, 0.0F, -1.0F, 2.0F, 9.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(-1.0F, -9.0F, 0.0F));
 
 		return LayerDefinition.create(meshdefinition, 64, 64);
 	}
 
-
 	@Override
 	public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-		this.body.getAllParts().forEach(ModelPart::resetPose);
+		this.dollEnemy.getAllParts().forEach(ModelPart::resetPose);
 
 		head.yRot = netHeadYaw * Mth.DEG_TO_RAD;
 		head.xRot = headPitch * Mth.DEG_TO_RAD;
