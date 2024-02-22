@@ -10,6 +10,8 @@ import net.minecraft.resources.ResourceLocation;
 public class DollEnemyRenderer extends MobRenderer<DollEnemy, DollEnemyModel<DollEnemy>> {
     private static final ResourceLocation TEXTURE =
             new ResourceLocation(TouhouThingies.MODID, "textures/entity/doll_enemy.png");
+    private static final ResourceLocation TEXTURE2 =
+            new ResourceLocation(TouhouThingies.MODID, "textures/entity/doll_enemy_explosive.png");
 
     public DollEnemyRenderer(EntityRendererProvider.Context pContext) {
         super(pContext, new DollEnemyModel<>(pContext.bakeLayer(DollEnemyModel.LAYER_LOCATION)), 0.5f);
@@ -17,10 +19,10 @@ public class DollEnemyRenderer extends MobRenderer<DollEnemy, DollEnemyModel<Dol
 
     @Override
     public ResourceLocation getTextureLocation(DollEnemy dollEnemy) {
-        if(true) {
+        if(!dollEnemy.getExplosive()) {
             return TEXTURE;
         } else {
-            return null;
+            return TEXTURE2;
         }
     }
 
