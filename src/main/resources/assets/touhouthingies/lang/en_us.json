@@ -1,9 +1,11 @@
 {
   "item.touhouthingies.doll_enemy_spawn_egg": "Doll Spawn Egg",
+  "item.touhouthingies.lancer_doll_enemy_spawn_egg": "Lancer Doll Spawn Egg",
 
   "block.touhouthingies.cushion_block": "Cushion Block",
 
   "entity.touhouthingies.doll_enemy": "Doll",
+  "entity.touhouthingies.lancer_doll_enemy": "Lancer Doll",
 
   "itemGroup.touhou_thingies_tab": "Touhou Thingies"
 }

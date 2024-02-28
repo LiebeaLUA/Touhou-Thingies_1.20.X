@@ -124,7 +124,6 @@ public class DollEnemy extends Monster {
         }
     }
 
-
     public void onSyncedDataUpdated(EntityDataAccessor<?> pKey) {
         if (DATA_PRIMED.equals(pKey)) {
             if (this.getPrimed()) {
@@ -147,7 +146,7 @@ public class DollEnemy extends Monster {
     @Nullable
     @Override
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor pLevel, DifficultyInstance pDifficulty, MobSpawnType pReason, @Nullable SpawnGroupData pSpawnData, @Nullable CompoundTag pDataTag) {
-        if (pLevel.getRandom().nextFloat() < 0.2F || pLevel.getBlockState(this.blockPosition().below()).is(Blocks.RED_NETHER_BRICKS)) {
+        if (this.random.nextFloat() < 0.2F || pLevel.getBlockState(this.blockPosition().below()).is(Blocks.RED_NETHER_BRICKS)) {
             this.setExplosive(true);
         } else {
             this.setExplosive(false);

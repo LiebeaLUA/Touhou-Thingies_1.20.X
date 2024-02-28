@@ -15,6 +15,10 @@ public class ItemRegistry {
     public static final RegistryObject<ForgeSpawnEggItem> DOLL_ENEMY_SPAWN_EGG = ITEMS.register("doll_enemy_spawn_egg",
             () -> new ForgeSpawnEggItem(EntityRegistry.DOLL_ENEMY, 0x139dbf, 0xffffff, new Item.Properties()));
 
+    public static final RegistryObject<ForgeSpawnEggItem> LANCER_DOLL_ENEMY_SPAWN_EGG = ITEMS.register("lancer_doll_enemy_spawn_egg",
+            () -> new ForgeSpawnEggItem(EntityRegistry.LANCER_DOLL_ENEMY, 0x000000, 0xffffff, new Item.Properties()));
+
+
     public static final RegistryObject<BlockItem> CUSHION_BLOCK_ITEM = ITEMS.register("cushion_block",
             () -> new BlockItem(BlockRegistry.CUSHION_BLOCK.get(), new Item.Properties()));
 
