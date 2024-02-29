@@ -1,8 +1,10 @@
 package net.liebealua.touhouthingies.entity.lancerDollEnemy;
 
 import net.liebealua.touhouthingies.registries.EntityRegistry;
+import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -31,16 +33,14 @@ public class LancerDollEnemy extends Monster {
     public final AnimationState idleAnimationState = new AnimationState();
     public final AnimationState chargeAnimationState = new AnimationState();
     public final AnimationState attackAnimationState = new AnimationState();
-    private ActionPhase actionPhase;
-    private static final EntityDataAccessor<Boolean> DATA_IS_ATTACKING = SynchedEntityData.defineId(LancerDollEnemy.class, EntityDataSerializers.BOOLEAN);
-    private static final EntityDataAccessor<Boolean> DATA_IS_CHARGING = SynchedEntityData.defineId(LancerDollEnemy.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Byte> DATA_STATE = SynchedEntityData.defineId(LancerDollEnemy.class, EntityDataSerializers.BYTE);
 //    private static final EntityDataAccessor<Integer> DATA_TIME_SINCE_LAST_ATTACK = SynchedEntityData.defineId(LancerDollEnemy.class, EntityDataSerializers.INT);
     private BlockPos boundOrigin;
 
     public LancerDollEnemy(EntityType<LancerDollEnemy> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
         this.moveControl = new FlyingMoveControl(this, 20, false);
-        this.actionPhase = ActionPhase.WANDER;
+        this.setState(State.WANDER);
     }
     public LancerDollEnemy(Level level, double x, double y, double z) {
         this(EntityRegistry.LANCER_DOLL_ENEMY.get(), level);
@@ -69,7 +69,7 @@ public class LancerDollEnemy extends Monster {
 
     @Override
     protected void registerGoals() {
-        this.goalSelector.addGoal(0, new LancerDollChargeAttackGoal(this, 1.0, 8.0f, 20, 60));
+        this.goalSelector.addGoal(0, new LancerDollChargeAttackGoal(this, 1.0, 8.0f, 20, 100));
         this.goalSelector.addGoal(1, new WaterAvoidingRandomFlyingGoal(this, 1.0f));
         this.goalSelector.addGoal(1, new LookAtPlayerGoal(this, Player.class, 6.0f));
         this.goalSelector.addGoal(2, new RandomLookAroundGoal(this));
@@ -87,7 +87,7 @@ public class LancerDollEnemy extends Monster {
     }
 
     public void travel(Vec3 pTravelVector) {
-        if (this.isControlledByLocalInstance() && this.actionPhase != ActionPhase.CHARGE) {
+        if (this.isControlledByLocalInstance() && this.getState() != State.CHARGE) {
             if (this.isInWater()) {
                 this.moveRelative(0.02F, pTravelVector);
                 this.move(MoverType.SELF, this.getDeltaMovement());
@@ -115,27 +115,32 @@ public class LancerDollEnemy extends Monster {
             }
         }
 
-        this.calculateEntityAnimation(false);
+        this.calculateEntityAnimation(true);
     }
 
     @Override
     public void tick() {
         if(this.level().isClientSide()) {
-            this.idleAnimationState.animateWhen(this.actionPhase == ActionPhase.WANDER || this.actionPhase == ActionPhase.FOLLOW, this.tickCount);
-            this.chargeAnimationState.animateWhen(this.actionPhase == ActionPhase.CHARGE, this.tickCount);
-            this.attackAnimationState.animateWhen(this.actionPhase == ActionPhase.LUNGE, this.tickCount);
+            this.idleAnimationState.animateWhen(this.getState() == State.WANDER || this.getState() == State.FOLLOW, this.tickCount);
+            this.chargeAnimationState.animateWhen(this.getState()  == State.CHARGE, this.tickCount);
+            this.attackAnimationState.animateWhen(this.getState() == State.LUNGE, this.tickCount);
         }
 
-        switch (this.actionPhase) {
-            case WANDER -> this.playSound(SoundEvents.END_PORTAL_FRAME_FILL);
-            case FOLLOW -> this.playSound(SoundEvents.AMETHYST_BLOCK_CHIME);
-            case CHARGE -> this.playSound(SoundEvents.FLINTANDSTEEL_USE);
-            case LUNGE -> this.playSound(SoundEvents.CAT_AMBIENT);
+//        switch (this.getState()) {
+//            case WANDER -> this.playSound(SoundEvents.END_PORTAL_FRAME_FILL);
+//            case FOLLOW -> this.playSound(SoundEvents.BUBBLE_COLUMN_BUBBLE_POP);
+//            case CHARGE -> this.playSound(SoundEvents.FLINTANDSTEEL_USE, 0.1f, 1);
+//            case LUNGE -> this.playSound(SoundEvents.CAT_AMBIENT);
+//        }
+
+        if (this.getState() == State.CHARGE) {
+            this.yBodyRot = this.yHeadRot;
         }
+
+
 
         super.tick();
     }
-
 
 
     private class LancerDollChargeAttackGoal extends Goal {
@@ -168,8 +173,8 @@ public class LancerDollEnemy extends Monster {
             LivingEntity target = this.mob.getTarget();
             if (target != null && target.isAlive()) {
                 this.target = target;
-                this.targetPos = this.target.position();
-                this.mob.actionPhase = ActionPhase.FOLLOW;
+                if (this.mob.getState() == State.WANDER)
+                    this.mob.setState(State.FOLLOW);
                 return true;
             } else {
                 return false;
@@ -177,18 +182,17 @@ public class LancerDollEnemy extends Monster {
         }
 
         public boolean canContinueToUse() {
-            return this.canUse() && this.timeSinceLastAttack >= this.cooldown;
+            return this.canUse();
         }
 
         public void start() {
-            this.mob.actionPhase = ActionPhase.FOLLOW;
         }
 
         public void stop() {
             this.target = null;
             this.seeTime = 0;
             this.timeSinceLastAttack = 0;
-            this.mob.actionPhase = ActionPhase.WANDER;
+            this.mob.setState(State.WANDER);
             this.chargeTime = 0;
         }
 
@@ -197,15 +201,18 @@ public class LancerDollEnemy extends Monster {
         }
 
         public void tick() {
+            this.mob.setCustomName(Component.literal("" + this.mob.getState()));
+
             this.target = this.mob.getTarget();
             assert this.target != null;
             double distanceToTarget = this.mob.distanceToSqr(this.target.getX(), this.target.getY(), this.target.getZ());
             boolean canSeeTarget = this.mob.getSensing().hasLineOfSight(this.target);
-            if (this.mob.actionPhase != ActionPhase.CHARGE && this.mob.actionPhase != ActionPhase.LUNGE)
+            if (this.mob.getState() != State.CHARGE && this.mob.getState() != State.LUNGE && this.targetPos != null) {
                 this.targetPos = this.target.position();
-            this.mob.getLookControl().setLookAt(this.targetPos);
+                this.mob.getLookControl().setLookAt(this.target);
+            }
 
-            switch (this.mob.actionPhase) {
+            switch (this.mob.getState()) {
                 case FOLLOW -> {
                     if (canSeeTarget) {
                         this.seeTime++;
@@ -213,16 +220,16 @@ public class LancerDollEnemy extends Monster {
                         this.seeTime = 0;
                     }
                     //Get closer if not within attack range
-                    if (!(distanceToTarget > (double)this.attackRadiusSqr)) {
+                    if (distanceToTarget <= (double)this.attackRadiusSqr) {
                         this.mob.getNavigation().stop();
                     } else {
                         this.mob.getNavigation().moveTo(this.target, this.speedModifier);
                     }
                     //If off cooldown and having looked at target for long enough, proceed to charge attack after a random interval
                     this.timeSinceLastAttack++;
-                    if (this.timeSinceLastAttack >= this.cooldown && this.seeTime >= this.requiredSeeTime) {
+                    if (this.timeSinceLastAttack >= this.cooldown && this.seeTime >= this.requiredSeeTime && distanceToTarget <= (double)this.attackRadiusSqr) {
                         if (LancerDollEnemy.this.random.nextFloat() < 0.2f || true) {
-                            this.mob.actionPhase = ActionPhase.CHARGE;
+                            this.mob.setState(State.CHARGE);
                         }
                     }
                     break;
@@ -230,61 +237,28 @@ public class LancerDollEnemy extends Monster {
 
                 case CHARGE -> {
                     this.chargeTime++;
-                    if (this.chargeTime < 60) {
+                    if (this.chargeTime < 40) {
                         this.targetPos = this.target.position();
-                    } else if (this.chargeTime >= 80) {
-                        this.mob.actionPhase = ActionPhase.LUNGE;
+                        this.mob.getLookControl().setLookAt(this.targetPos);
+                    } else if (this.chargeTime >= 60) {
+                        this.chargeTime = 0;
+                        this.mob.setState(State.LUNGE);
+                        this.mob.setDeltaMovement(this.mob.getViewVector(1.0f));
+                        this.mob.setYRot(getViewYRot(1));
                     }
                     break;
                 }
 
                 case LUNGE -> {
-                    this.mob.moveTo(this.targetPos);
-                    this.timeSinceLastAttack = 0;
-                    if (this.mob.getNavigation().isDone()) {
-                        this.mob.actionPhase = ActionPhase.WANDER;
+                    this.chargeTime++;
+                    if (this.chargeTime >= 40) {
+                        this.timeSinceLastAttack = 0;
+                        this.chargeTime = 0;
+                        this.mob.setState(State.WANDER);
                     }
                     break;
                 }
             }
-
-//            if (LancerDollEnemy.this.actionPhase == Action) {
-//                this.mob.getLookControl().setLookAt(this.target, 30.0F, 30.0F);
-
-
-
-//                if (canSeeTarget) {
-//                    ++this.seeTime;
-//                } else {
-//                    this.seeTime = 0;
-//                }
-
-//                //Get closer if not within attack range
-//                if (!(distanceToTarget > (double)this.attackRadiusSqr)) {
-//                    this.mob.getNavigation().stop();
-//                } else {
-//                    this.mob.getNavigation().moveTo(this.target, this.speedModifier);
-//                }
-
-//                //If off cooldown and having looked at target for long enough, proceed to attack after a random interval
-//                this.timeSinceLastAttack++;
-//                if (this.timeSinceLastAttack >= this.cooldown && this.seeTime >= this.requiredSeeTime) {
-//                    if (LancerDollEnemy.this.random.nextFloat() < 0.2f) {
-//                        setAttacking(true);
-//                        setCharging(true);
-//                    }
-//                }
-//            } else {
-//                if (chargeTime < 60) {
-//                    targetPos = this.target.position();
-//                } else if (chargeTime >= 80) {
-//                    this.mob.moveTo(targetPos);
-//                    this.mob.playSound(SoundEvents.CHICKEN_HURT);
-//                    this.timeSinceLastAttack = 0;
-//                    return;
-//                }
-//                chargeTime++;
-//            }
         }
     }
 
@@ -353,26 +327,26 @@ public class LancerDollEnemy extends Monster {
 
     }
 
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(DATA_IS_ATTACKING, false);
-        this.entityData.define(DATA_IS_CHARGING, false);
-//        this.entityData.define(DATA_TIME_SINCE_LAST_ATTACK, 0);
-    }
-
-    public void setAttacking(boolean pAttacking) {
-        this.entityData.set(DATA_IS_ATTACKING, pAttacking);
-    }
-    public boolean getAttacking() {
-        return this.entityData.get(DATA_IS_ATTACKING);
-    }
-
-    public void setCharging(boolean pCharging) {
-        this.entityData.set(DATA_IS_CHARGING, pCharging);
-    }
-    public boolean getCharging() {
-        return this.entityData.get(DATA_IS_CHARGING);
-    }
+//    protected void defineSynchedData() {
+//        super.defineSynchedData();
+//        this.entityData.define(DATA_IS_ATTACKING, false);
+//        this.entityData.define(DATA_IS_CHARGING, false);
+////        this.entityData.define(DATA_TIME_SINCE_LAST_ATTACK, 0);
+//    }
+//
+//    public void setAttacking(boolean pAttacking) {
+//        this.entityData.set(DATA_IS_ATTACKING, pAttacking);
+//    }
+//    public boolean getAttacking() {
+//        return this.entityData.get(DATA_IS_ATTACKING);
+//    }
+//
+//    public void setCharging(boolean pCharging) {
+//        this.entityData.set(DATA_IS_CHARGING, pCharging);
+//    }
+//    public boolean getCharging() {
+//        return this.entityData.get(DATA_IS_CHARGING);
+//    }
 
 //    public void setTimeSinceLastAttack(int pTime) {
 //        this.entityData.set(DATA_TIME_SINCE_LAST_ATTACK, pTime);
@@ -394,21 +368,26 @@ public class LancerDollEnemy extends Monster {
     }
 
 
-    private enum ActionPhase {
+    private enum State {
         WANDER,
         FOLLOW,
         CHARGE,
         LUNGE;
 
-        ActionPhase() {
+        State() {
         }
     }
 
-    private ActionPhase getActionPhase() {
-        return this.actionPhase;
+    private State getState() {
+        return State.values()[this.entityData.get(DATA_STATE)];
     }
 
-    private void setActionPhase(ActionPhase pPhase) {
-        this.actionPhase = pPhase;
+    private void setState(State pPhase) {
+        this.entityData.set(DATA_STATE, (byte) pPhase.ordinal());
+    }
+
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(DATA_STATE, (byte) State.WANDER.ordinal());
     }
 }

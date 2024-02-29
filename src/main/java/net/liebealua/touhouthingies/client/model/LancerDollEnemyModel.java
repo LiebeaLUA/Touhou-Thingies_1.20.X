@@ -100,8 +100,11 @@ public class LancerDollEnemyModel<T extends LancerDollEnemy> extends Hierarchica
     public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         this.model.getAllParts().forEach(ModelPart::resetPose);
 
-        head.yRot = netHeadYaw * Mth.DEG_TO_RAD;
-        head.xRot = headPitch * Mth.DEG_TO_RAD;
+
+        if (!entity.chargeAnimationState.isStarted() && !entity.attackAnimationState.isStarted()) {
+            head.xRot = headPitch * Mth.DEG_TO_RAD;
+            head.yRot = netHeadYaw * Mth.DEG_TO_RAD;
+        }
 
 //        right_arm.xRot = Mth.cos(limbSwing * 0.6662f) * 1.2f * limbSwingAmount;
 //        left_arm.xRot = Mth.cos(limbSwing * 0.6662f + Mth.PI) * 1.2f * limbSwingAmount;
