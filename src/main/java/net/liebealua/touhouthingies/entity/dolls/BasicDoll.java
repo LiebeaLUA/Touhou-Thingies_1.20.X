@@ -1,11 +1,8 @@
-package net.liebealua.touhouthingies.entity.dollEnemy;
+package net.liebealua.touhouthingies.entity.dolls;
 
-import net.liebealua.touhouthingies.client.animation.DollEnemyAnimation;
 import net.liebealua.touhouthingies.registries.EntityRegistry;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -26,31 +23,29 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class DollEnemy extends Monster {
+public class BasicDoll extends AbstractDoll {
     public final AnimationState idleAnimationState = new AnimationState();
     public final AnimationState deathAnimationState = new AnimationState();
     public final AnimationState shakeAnimationState = new AnimationState();
-    private static final EntityDataAccessor<Integer> DATA_FUSE_COUNTDOWN = SynchedEntityData.defineId(DollEnemy.class, EntityDataSerializers.INT);
-    private static final EntityDataAccessor<Boolean> DATA_PRIMED = SynchedEntityData.defineId(DollEnemy.class, EntityDataSerializers.BOOLEAN);
-    private static final EntityDataAccessor<Boolean> DATA_EXPLOSIVE = SynchedEntityData.defineId(DollEnemy.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Integer> DATA_FUSE_COUNTDOWN = SynchedEntityData.defineId(BasicDoll.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Boolean> DATA_PRIMED = SynchedEntityData.defineId(BasicDoll.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> DATA_EXPLOSIVE = SynchedEntityData.defineId(BasicDoll.class, EntityDataSerializers.BOOLEAN);
     public DamageSource deathSource;
     private static final int maxFuseTime = 80;
     private static final int explosionRadius = 2;
     private SoundEvent fuseSound = SoundEvents.BOTTLE_FILL;
 
-    public DollEnemy(EntityType<DollEnemy> pEntityType, Level pLevel) {
+    public BasicDoll(EntityType<BasicDoll> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
     }
-    public DollEnemy(Level level, double x, double y, double z) {
-        this(EntityRegistry.DOLL_ENEMY.get(), level);
+    public BasicDoll(Level level, double x, double y, double z) {
+        this(EntityRegistry.BASIC_DOLL.get(), level);
         setPos(x, y, z);
     }
-    public DollEnemy(Level level, BlockPos position) {
+    public BasicDoll(Level level, BlockPos position) {
         this(level, position.getX(), position.getY(), position.getZ());
     }
 
@@ -214,11 +209,6 @@ public class DollEnemy extends Monster {
 
     public boolean getExplosive() {
         return this.entityData.get(DATA_EXPLOSIVE);
-    }
-
-    @Override
-    public boolean removeWhenFarAway(double pDistanceToClosestPlayer) {
-        return false;
     }
 }
 

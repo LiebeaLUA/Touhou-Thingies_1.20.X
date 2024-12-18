@@ -6,8 +6,8 @@ package net.liebealua.touhouthingies.client.model;// Made with Blockbench 4.9.3
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.liebealua.touhouthingies.TouhouThingies;
-import net.liebealua.touhouthingies.client.animation.DollEnemyAnimation;
-import net.liebealua.touhouthingies.entity.dollEnemy.DollEnemy;
+import net.liebealua.touhouthingies.client.animation.BasicDollAnimation;
+import net.liebealua.touhouthingies.entity.dolls.BasicDoll;
 import net.minecraft.client.model.*;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
@@ -18,10 +18,10 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.HumanoidArm;
 
-public class DollEnemyModel<T extends DollEnemy> extends HierarchicalModel<T> implements ArmedModel, HeadedModel {
+public class BasicDollModel<T extends BasicDoll> extends HierarchicalModel<T> implements ArmedModel, HeadedModel {
 	// This layer location should be baked with EntityRendererProvider.Context in the entity renderer and passed into this model's constructor
-	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation(TouhouThingies.MODID, "doll_enemy"), "main");
-	public final ModelPart dollEnemy;
+	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation(TouhouThingies.MODID, "basic_doll"), "main");
+	public final ModelPart basicDoll;
 	public final ModelPart body;
 	public final ModelPart body_upper;
 	public final ModelPart body_lower;
@@ -33,9 +33,9 @@ public class DollEnemyModel<T extends DollEnemy> extends HierarchicalModel<T> im
 	public final ModelPart left_leg;
 
 
-	public DollEnemyModel(ModelPart root) {
-		this.dollEnemy = root.getChild("dollEnemy");
-		this.body = dollEnemy.getChild("body");
+	public BasicDollModel(ModelPart root) {
+		this.basicDoll = root.getChild("basicDoll");
+		this.body = basicDoll.getChild("body");
 		this.body_upper = body.getChild("body_upper");
 		this.body_lower = body.getChild("body_lower");
 		this.head = body_upper.getChild("head");
@@ -50,9 +50,9 @@ public class DollEnemyModel<T extends DollEnemy> extends HierarchicalModel<T> im
 //		MeshDefinition meshdefinition = new MeshDefinition();
 //		PartDefinition partdefinition = meshdefinition.getRoot();
 //
-//		PartDefinition dollEnemy = partdefinition.addOrReplaceChild("dollEnemy", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
+//		PartDefinition basicDoll = partdefinition.addOrReplaceChild("basicDoll", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
 //
-//		PartDefinition body = dollEnemy.addOrReplaceChild("body", CubeListBuilder.create(), PartPose.offset(0.0F, 6.0F, 0.0F));
+//		PartDefinition body = basicDoll.addOrReplaceChild("body", CubeListBuilder.create(), PartPose.offset(0.0F, 6.0F, 0.0F));
 //
 //		PartDefinition body_upper = body.addOrReplaceChild("body_upper", CubeListBuilder.create().texOffs(24, 25).addBox(-2.0F, -6.0F, -1.0F, 4.0F, 6.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 9.0F, 0.0F));
 //
@@ -86,9 +86,9 @@ public class DollEnemyModel<T extends DollEnemy> extends HierarchicalModel<T> im
 		MeshDefinition meshdefinition = new MeshDefinition();
 		PartDefinition partdefinition = meshdefinition.getRoot();
 
-		PartDefinition dollEnemy = partdefinition.addOrReplaceChild("dollEnemy", CubeListBuilder.create(), PartPose.offset(0.0F, 24.0F, 0.0F));
+		PartDefinition basicDoll = partdefinition.addOrReplaceChild("basicDoll", CubeListBuilder.create(), PartPose.offset(0.0F, 24.0F, 0.0F));
 
-		PartDefinition body = dollEnemy.addOrReplaceChild("body", CubeListBuilder.create(), PartPose.offset(0.0F, 6.0F, 0.0F));
+		PartDefinition body = basicDoll.addOrReplaceChild("body", CubeListBuilder.create(), PartPose.offset(0.0F, 6.0F, 0.0F));
 
 		PartDefinition body_upper = body.addOrReplaceChild("body_upper", CubeListBuilder.create().texOffs(24, 25).addBox(-2.0F, -6.0F, -1.0F, 4.0F, 6.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 9.0F, 0.0F));
 
@@ -123,7 +123,7 @@ public class DollEnemyModel<T extends DollEnemy> extends HierarchicalModel<T> im
 
 	@Override
 	public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-		this.dollEnemy.getAllParts().forEach(ModelPart::resetPose);
+		this.basicDoll.getAllParts().forEach(ModelPart::resetPose);
 
 		head.yRot = netHeadYaw * Mth.DEG_TO_RAD;
 		head.xRot = headPitch * Mth.DEG_TO_RAD;
@@ -133,18 +133,14 @@ public class DollEnemyModel<T extends DollEnemy> extends HierarchicalModel<T> im
 		right_leg.xRot = Mth.cos(limbSwing * 0.6662f + Mth.PI) * 0.8f * limbSwingAmount;
 		left_leg.xRot = Mth.cos(limbSwing * 0.6662f) * 0.8f * limbSwingAmount;
 
-		animate(entity.idleAnimationState, DollEnemyAnimation.idle, ageInTicks);
+		animate(entity.idleAnimationState, BasicDollAnimation.idle, ageInTicks);
 		if (entity.getPrimed())
 			this.head.resetPose();
-		animate(entity.deathAnimationState, DollEnemyAnimation.death, ageInTicks);
-		animate(entity.shakeAnimationState, DollEnemyAnimation.shake, ageInTicks);
+		animate(entity.deathAnimationState, BasicDollAnimation.death, ageInTicks);
+		animate(entity.shakeAnimationState, BasicDollAnimation.shake, ageInTicks);
 
 		setupAttackAnimation(entity, ageInTicks);
 	}
-
-
-
-
 
 	protected void setupAttackAnimation(T pLivingEntity, float pAgeInTicks) {
 		if (!(this.attackTime <= 0.0F)) {
@@ -192,7 +188,7 @@ public class DollEnemyModel<T extends DollEnemy> extends HierarchicalModel<T> im
 
 	@Override
 	public ModelPart root() {
-		return this.dollEnemy;
+		return this.basicDoll;
 	}
 
 	@Override

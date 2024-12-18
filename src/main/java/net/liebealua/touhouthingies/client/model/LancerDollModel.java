@@ -4,9 +4,8 @@ package net.liebealua.touhouthingies.client.model;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.liebealua.touhouthingies.TouhouThingies;
-import net.liebealua.touhouthingies.client.animation.DollEnemyAnimation;
-import net.liebealua.touhouthingies.client.animation.LancerDollEnemyAnimation;
-import net.liebealua.touhouthingies.entity.lancerDollEnemy.LancerDollEnemy;
+import net.liebealua.touhouthingies.client.animation.LancerDollAnimation;
+import net.liebealua.touhouthingies.entity.dolls.LancerDoll;
 import net.minecraft.client.model.*;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
@@ -17,9 +16,9 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.HumanoidArm;
 
-public class LancerDollEnemyModel<T extends LancerDollEnemy> extends HierarchicalModel<T> implements ArmedModel, HeadedModel {
+public class LancerDollModel<T extends LancerDoll> extends HierarchicalModel<T> implements ArmedModel, HeadedModel {
     // This layer location should be baked with EntityRendererProvider.Context in the entity renderer and passed into this model's constructor
-    public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation(TouhouThingies.MODID, "lancer_doll_enemy"), "main");
+    public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation(TouhouThingies.MODID, "lancer_doll"), "main");
     public final ModelPart model;
     public final ModelPart body;
     public final ModelPart body_upper;
@@ -33,7 +32,7 @@ public class LancerDollEnemyModel<T extends LancerDollEnemy> extends Hierarchica
     public final ModelPart left_leg;
 
 
-    public LancerDollEnemyModel(ModelPart root) {
+    public LancerDollModel(ModelPart root) {
         this.model = root.getChild("model");
         this.body = model.getChild("body");
         this.body_upper = body.getChild("body_upper");
@@ -111,9 +110,9 @@ public class LancerDollEnemyModel<T extends LancerDollEnemy> extends Hierarchica
 //        right_leg.xRot = Mth.cos(limbSwing * 0.6662f + Mth.PI) * 0.8f * limbSwingAmount;
 //        left_leg.xRot = Mth.cos(limbSwing * 0.6662f) * 0.8f * limbSwingAmount;
 
-        animate(entity.idleAnimationState, LancerDollEnemyAnimation.idle, ageInTicks);
-        animate(entity.chargeAnimationState, LancerDollEnemyAnimation.charge, ageInTicks);
-        animate(entity.attackAnimationState, LancerDollEnemyAnimation.attack, ageInTicks);
+        animate(entity.idleAnimationState, LancerDollAnimation.idle, ageInTicks);
+        animate(entity.chargeAnimationState, LancerDollAnimation.charge, ageInTicks);
+        animate(entity.attackAnimationState, LancerDollAnimation.attack, ageInTicks);
     }
 
     private HumanoidArm getAttackArm(T pEntity) {

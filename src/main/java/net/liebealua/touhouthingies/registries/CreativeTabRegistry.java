@@ -16,8 +16,8 @@ public class CreativeTabRegistry {
                     .icon(ItemRegistry.CUSHION_BLOCK_ITEM.get()::getDefaultInstance)
                     .displayItems((itemDisplayParameters, output) -> {
                         output.accept(ItemRegistry.CUSHION_BLOCK_ITEM.get());
-                        output.accept(ItemRegistry.DOLL_ENEMY_SPAWN_EGG.get());
-                        output.accept(ItemRegistry.LANCER_DOLL_ENEMY_SPAWN_EGG.get());
+                        output.accept(ItemRegistry.BASIC_DOLL_SPAWN_EGG.get());
+                        output.accept(ItemRegistry.LANCER_DOLL_SPAWN_EGG.get());
                     })
                     .build());
 }
