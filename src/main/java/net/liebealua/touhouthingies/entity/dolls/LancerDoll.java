@@ -31,7 +31,6 @@ public class LancerDoll extends AbstractDoll {
     public final AnimationState idleAnimationState = new AnimationState();
     public final AnimationState chargeAnimationState = new AnimationState();
     public final AnimationState attackAnimationState = new AnimationState();
-    //private static final EntityDataAccessor<Byte> DATA_STATE = SynchedEntityData.defineId(LancerDoll.class, EntityDataSerializers.BYTE);
     private static final EntityDataAccessor<Boolean> DATA_ATTACKING = SynchedEntityData.defineId(LancerDoll.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Integer> DATA_AIM_TIME = SynchedEntityData.defineId(LancerDoll.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Float> DATA_AIM_Y_ROT = SynchedEntityData.defineId(LancerDoll.class, EntityDataSerializers.FLOAT);
@@ -42,7 +41,6 @@ public class LancerDoll extends AbstractDoll {
     public LancerDoll(EntityType<LancerDoll> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
         this.moveControl = new FlyingMoveControl(this, 20, false);
-        //this.setState(State.WANDER);
     }
     public LancerDoll(Level level, double x, double y, double z) {
         this(EntityRegistry.LANCER_DOLL.get(), level);
@@ -179,26 +177,6 @@ public class LancerDoll extends AbstractDoll {
     }
 
 
-//    public enum State {
-//        WANDER,
-//        FOLLOW,
-//        CHARGE,
-//        LUNGE;
-//
-//        State() {
-//        }
-//    }
-
-
-//    public State getState() {
-//        return State.values()[this.entityData.get(DATA_STATE)];
-//    }
-//
-//    public void setState(State pPhase) {
-//        this.entityData.set(DATA_STATE, (byte) pPhase.ordinal());
-//    }
-
-
 
 
     public boolean getAttacking() {
@@ -230,7 +208,5 @@ public class LancerDoll extends AbstractDoll {
         this.entityData.define(DATA_ATTACKING, false);
         this.entityData.define(DATA_AIM_TIME, 0);
         this.entityData.define(DATA_AIM_Y_ROT, 0.0f);
-
-//        this.entityData.define(DATA_STATE, (byte) State.WANDER.ordinal());
     }
 }

@@ -5,7 +5,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.ai.goal.Goal;
-import net.minecraft.world.entity.monster.Phantom;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.EnumSet;
@@ -91,9 +90,6 @@ public class LancerDollLungeAttackGoal extends Goal {
                 }
             }
 
-            //this.mob.setCustomName(Component.literal("" + this.mob.getAimTime()));
-
-
             //Reset aim timer if no line of sight, otherwise increase it
             if (canSeeTarget) {
                 this.mob.setAimTime(this.mob.getAimTime() + 1);
@@ -119,7 +115,6 @@ public class LancerDollLungeAttackGoal extends Goal {
                 deltaY = this.target.position().y - this.mob.getY();
                 deltaZ = this.target.position().z - this.mob.getZ();
                 this.mob.setAimYRot(-((float) Mth.atan2(deltaX, deltaZ)) * 57.295776F);
-                //this.mob.setXRotat(-((float)Mth.atan2(deltaY, deltaZ)) * 57.295776F);
 
             } else if (this.mob.getAimTime() == 60) {
                 this.mob.setDeltaMovement(new Vec3(deltaX, deltaY, deltaZ).normalize().multiply(lungeForce, lungeForce, lungeForce));
@@ -139,52 +134,6 @@ public class LancerDollLungeAttackGoal extends Goal {
 
 
         }
-
-
-//        switch (this.mob.getState()) {
-//            case FOLLOW -> {
-//
-//
-//                //If off cooldown and having looked at target for long enough, proceed to charge attack after a random interval
-//                this.timeSinceLastAttack++;
-//                if (this.timeSinceLastAttack >= this.cooldown && this.aimTime >= this.requiredSeeTime && distanceToTarget <= (double)this.attackRadiusSqr) {
-//                    if (Math.random() < 0.2f || true) {
-//                        this.mob.setState(LancerDoll.State.CHARGE);
-//                    }
-//                }
-//                break;
-//            }
-//
-//            case CHARGE -> {
-//                this.actionTimer++;
-//                if (this.actionTimer < 40) {
-//                    this.targetPos = this.target.position();
-//                    this.mob.getLookControl().setLookAt(this.targetPos);
-//                } else if (this.actionTimer >= 60) {
-//                    this.actionTimer = 0;
-//                    this.mob.setState(LancerDoll.State.LUNGE);
-//                    this.mob.setDeltaMovement(this.mob.getViewVector(1.0f));
-//                    this.mob.setYRot(mob.getViewYRot(1));
-//                }
-//                break;
-//            }
-//
-//            case LUNGE -> {
-//                this.actionTimer++;
-//                if (this.actionTimer >= 40) {
-//                    this.timeSinceLastAttack = 0;
-//                    this.actionTimer = 0;
-//                    this.mob.setState(LancerDoll.State.WANDER);
-//                }
-//                break;
-//            }
-//        }
-        }
-
-//    protected float rotateTowards(float pFrom, float pTo, float pMaxDelta) {
-//        float $$3 = Mth.degreesDifference(pFrom, pTo);
-//        float $$4 = Mth.clamp($$3, -pMaxDelta, pMaxDelta);
-//        return pFrom + $$4;
-//    }
+    }
 }
 

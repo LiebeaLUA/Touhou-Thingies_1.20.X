@@ -1,9 +1,6 @@
 package net.liebealua.touhouthingies;
 
-import net.liebealua.touhouthingies.registries.BlockRegistry;
-import net.liebealua.touhouthingies.registries.CreativeTabRegistry;
-import net.liebealua.touhouthingies.registries.EntityRegistry;
-import net.liebealua.touhouthingies.registries.ItemRegistry;
+import net.liebealua.touhouthingies.registries.*;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -19,5 +16,6 @@ public class TouhouThingies {
         BlockRegistry.BLOCKS.register(bus);
         EntityRegistry.ENTITIES.register(bus);
         CreativeTabRegistry.TABS.register(bus);
+        SoundRegistry.SOUND_EVENTS.register(bus);
     }
 }

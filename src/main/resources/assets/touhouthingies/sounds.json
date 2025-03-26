@@ -1,0 +1,8 @@
+{
+  "teleporter_teleport": {
+    "subtitle": "sounds.touhouthingies.teleporter_teleport",
+    "sounds": [
+      "touhouthingies:teleporter_teleport"
+    ]
+  }
+}

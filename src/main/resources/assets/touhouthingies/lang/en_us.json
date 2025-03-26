@@ -1,4 +1,6 @@
 {
+  "item.touhouthingies.teleporter_item": "Teleporter",
+  "item.touhouthingies.structure_debug_item": "Structure Debug Item",
   "item.touhouthingies.basic_doll_spawn_egg": "Doll Spawn Egg",
   "item.touhouthingies.lancer_doll_spawn_egg": "Lancer Doll Spawn Egg",
 
@@ -6,6 +8,10 @@
 
   "entity.touhouthingies.basic_doll": "Doll",
   "entity.touhouthingies.lancer_doll": "Lancer Doll",
+
+  "tooltip.touhouthingies.teleporter_item.tooltip": "§7A piece of futuristic technology! But it hasn't been perfected yet...",
+
+  "sounds.touhouthingies.teleporter_teleport": "Something teleports",
 
   "itemGroup.touhou_thingies_tab": "Touhou Thingies"
 }

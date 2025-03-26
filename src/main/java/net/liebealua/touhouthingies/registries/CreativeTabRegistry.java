@@ -18,6 +18,8 @@ public class CreativeTabRegistry {
                         output.accept(ItemRegistry.CUSHION_BLOCK_ITEM.get());
                         output.accept(ItemRegistry.BASIC_DOLL_SPAWN_EGG.get());
                         output.accept(ItemRegistry.LANCER_DOLL_SPAWN_EGG.get());
+                        output.accept(ItemRegistry.TELEPORTER_ITEM.get());
+                        output.accept(ItemRegistry.STRUCTURE_DEBUG_ITEM.get());
                     })
                     .build());
 }
